@@ -1,0 +1,511 @@
+{
+  "generated_at": "2026-11-18T16:53:30+00:00",
+  "results": {
+    "q001": {
+      "columns": [
+        "mean_tmax_anomaly_c"
+      ],
+      "rows": [
+        [
+          2.21
+        ]
+      ]
+    },
+    "q002": {
+      "columns": [
+        "mean_heat_days_per_station"
+      ],
+      "rows": [
+        [
+          65.0
+        ]
+      ]
+    },
+    "q003": {
+      "columns": [
+        "mean_very_hot_days_per_station"
+      ],
+      "rows": [
+        [
+          11.0
+        ]
+      ]
+    },
+    "q004": {
+      "columns": [
+        "mean_tmax_anomaly_c"
+      ],
+      "rows": [
+        [
+          0.74
+        ]
+      ]
+    },
+    "q005": {
+      "columns": [
+        "heatwave_count"
+      ],
+      "rows": [
+        [
+          662
+        ]
+      ]
+    },
+    "q006": {
+      "columns": [
+        "max_duration_days"
+      ],
+      "rows": [
+        [
+          22
+        ]
+      ]
+    },
+    "q007": {
+      "columns": [
+        "total_precip_mm"
+      ],
+      "rows": [
+        [
+          239.5
+        ]
+      ]
+    },
+    "q008": {
+      "columns": [
+        "mean_tmax_c"
+      ],
+      "rows": [
+        [
+          21.32
+        ]
+      ]
+    },
+    "q009": {
+      "columns": [
+        "trend_station_count"
+      ],
+      "rows": [
+        [
+          67
+        ]
+      ]
+    },
+    "q010": {
+      "columns": [
+        "heat_days"
+      ],
+      "rows": [
+        [
+          49
+        ]
+      ]
+    },
+    "q011": {
+      "columns": [
+        "department_name",
+        "mean_very_hot_days_per_station"
+      ],
+      "rows": [
+        [
+          "Gard",
+          23.8
+        ],
+        [
+          "Aude",
+          11.4
+        ],
+        [
+          "Lot",
+          11.3
+        ]
+      ]
+    },
+    "q012": {
+      "columns": [
+        "observation_year",
+        "mean_heat_days_per_station"
+      ],
+      "rows": [
+        [
+          2022,
+          65.0
+        ],
+        [
+          2003,
+          60.9
+        ],
+        [
+          2025,
+          50.7
+        ]
+      ]
+    },
+    "q013": {
+      "columns": [
+        "avg_heat_days"
+      ],
+      "rows": [
+        [
+          35.8
+        ]
+      ]
+    },
+    "q014": {
+      "columns": [
+        "department_code",
+        "heatwave_count"
+      ],
+      "rows": [
+        [
+          "30",
+          1747
+        ]
+      ]
+    },
+    "q015": {
+      "columns": [
+        "station_name",
+        "peak_tmax_c"
+      ],
+      "rows": [
+        [
+          "VERARGUES",
+          46.0
+        ]
+      ]
+    },
+    "q016": {
+      "columns": [
+        "avg_duration_days"
+      ],
+      "rows": [
+        [
+          4.7
+        ]
+      ]
+    },
+    "q017": {
+      "columns": [
+        "total_precip_mm"
+      ],
+      "rows": [
+        [
+          835.4
+        ]
+      ]
+    },
+    "q018": {
+      "columns": [
+        "department_count"
+      ],
+      "rows": [
+        [
+          11
+        ]
+      ]
+    },
+    "q019": {
+      "columns": [
+        "department_name",
+        "avg_anomaly_c"
+      ],
+      "rows": [
+        [
+          "Aude",
+          1.24
+        ],
+        [
+          "Lozère",
+          1.19
+        ],
+        [
+          "Hautes-Pyrénées",
+          1.05
+        ]
+      ]
+    },
+    "q020": {
+      "columns": [
+        "observation_month",
+        "avg_precip_mm"
+      ],
+      "rows": [
+        [
+          5,
+          73.6
+        ]
+      ]
+    },
+    "q021": {
+      "columns": [
+        "observation_year",
+        "mean_tmax_anomaly_c"
+      ],
+      "rows": [
+        [
+          2022,
+          2.21
+        ]
+      ]
+    },
+    "q022": {
+      "columns": [
+        "first_year_of_streak"
+      ],
+      "rows": [
+        [
+          2014
+        ]
+      ]
+    },
+    "q023": {
+      "columns": [
+        "trend_c_per_decade"
+      ],
+      "rows": [
+        [
+          0.59
+        ]
+      ]
+    },
+    "q024": {
+      "columns": [
+        "period",
+        "avg_heat_days"
+      ],
+      "rows": [
+        [
+          "1991-2000",
+          27.5
+        ],
+        [
+          "2016-2025",
+          45.9
+        ]
+      ]
+    },
+    "q025": {
+      "columns": [
+        "increase_days"
+      ],
+      "rows": [
+        [
+          7.1
+        ]
+      ]
+    },
+    "q026": {
+      "columns": [
+        "period",
+        "heatwave_count"
+      ],
+      "rows": [
+        [
+          "1991-2000",
+          143
+        ],
+        [
+          "2016-2025",
+          752
+        ]
+      ]
+    },
+    "q027": {
+      "columns": [
+        "years_above_normal"
+      ],
+      "rows": [
+        [
+          19
+        ]
+      ]
+    },
+    "q028": {
+      "columns": [
+        "observation_year",
+        "mean_tmax_anomaly_c"
+      ],
+      "rows": [
+        [
+          1996,
+          -1.18
+        ]
+      ]
+    },
+    "q029": {
+      "columns": [
+        "observation_year",
+        "increase_c"
+      ],
+      "rows": [
+        [
+          2022,
+          2.12
+        ]
+      ]
+    },
+    "q030": {
+      "columns": [
+        "decade_start",
+        "heatwave_count"
+      ],
+      "rows": [
+        [
+          2000,
+          403
+        ]
+      ]
+    },
+    "q031": {
+      "columns": [
+        "station_name",
+        "department_name",
+        "duration_days"
+      ],
+      "rows": [
+        [
+          "GENERARGUES",
+          "Gard",
+          22
+        ]
+      ]
+    },
+    "q032": {
+      "columns": [
+        "station_name",
+        "heat_days"
+      ],
+      "rows": [
+        [
+          "CERET",
+          100
+        ]
+      ]
+    },
+    "q033": {
+      "columns": [
+        "department_name"
+      ],
+      "rows": [
+        [
+          "Tarn-et-Garonne"
+        ],
+        [
+          "Haute-Garonne"
+        ],
+        [
+          "Tarn"
+        ],
+        [
+          "Ariège"
+        ],
+        [
+          "Gers"
+        ],
+        [
+          "Aveyron"
+        ],
+        [
+          "Lozère"
+        ],
+        [
+          "Hautes-Pyrénées"
+        ],
+        [
+          "Aude"
+        ]
+      ]
+    },
+    "q034": {
+      "columns": [
+        "heatwave_count"
+      ],
+      "rows": [
+        [
+          58
+        ]
+      ]
+    },
+    "q035": {
+      "columns": [
+        "heat_days"
+      ],
+      "rows": [
+        [
+          76
+        ]
+      ]
+    },
+    "q036": {
+      "columns": [
+        "start_year",
+        "heatwave_count",
+        "anomaly_c"
+      ],
+      "rows": [
+        [
+          2022,
+          176,
+          2.21
+        ]
+      ]
+    },
+    "q037": {
+      "columns": [
+        "department_name",
+        "gap_c"
+      ],
+      "rows": [
+        [
+          "Haute-Garonne",
+          0.45
+        ],
+        [
+          "Tarn",
+          0.41
+        ],
+        [
+          "Tarn-et-Garonne",
+          0.34
+        ]
+      ]
+    },
+    "q038": {
+      "columns": [
+        "station_count"
+      ],
+      "rows": [
+        [
+          35
+        ]
+      ]
+    },
+    "q039": {
+      "columns": [
+        "observation_month",
+        "mean_tmax_c"
+      ],
+      "rows": [
+        [
+          7,
+          31.71
+        ]
+      ]
+    },
+    "q040": {
+      "columns": [
+        "station_name",
+        "heatwave_count",
+        "avg_heat_days"
+      ],
+      "rows": [
+        [
+          "ST CHRISTOL-LES-ALES",
+          126,
+          71.2
+        ]
+      ]
+    }
+  }
+}

@@ -385,7 +385,7 @@
     JOIN marts.mart_occitanie_yearly AS o USING (observation_year)
     WHERE d.observation_year = 2022
       AND d.mean_tmax_anomaly_c > o.mean_tmax_anomaly_c
-  notes: "Attendu : 6 départements (Gers, Haute-Garonne, Hautes-Pyrénées, Lozère, Tarn, Tarn-et-Garonne). Régional : 2.21 °C."
+  notes: "Attendu : 9 départements sur 13 (tous sauf Lot, Gard, Pyrénées-Orientales, Hérault). Régional : 2.21 °C. L'ordre n'a pas d'importance."
 
 - id: q034
   split: test
