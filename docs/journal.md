@@ -51,3 +51,51 @@ révélé une note fausse (6 départements annoncés, 9 réels), et l'écriture 
 fait apparaître des limites de l'entrepôt : le nom des stations n'existe que dans la
 table des vagues de chaleur, et une station relocalisée change d'identifiant. Ces
 limites sont notées pour le README.
+
+
+## Étape 3 : accès BigQuery en lecture seule et garde-fous
+
+**Ce qu'on a fait.** J'ai construit une couche d'accès à BigQuery qui ne peut **que lire**
+le dataset `marts`, protégée par trois niveaux indépendants, chacun testé. Toute requête
+de l'agent suit le même chemin : validation du SQL, estimation du coût, exécution
+plafonnée, puis renvoi d'un résultat tronqué accompagné de ses métadonnées (SQL réellement
+exécuté, nombre total de lignes, octets lus, durée). En cas de refus ou d'échec, l'agent
+reçoit une seule erreur, au message court et explicite, pour pouvoir se corriger.
+
+**Niveau 1 : IAM (le plus fort).** Un compte de service dédié à l'agent, créé avec
+Terraform dans le dépôt du projet, n'a que deux rôles : `bigquery.dataViewer` sur le seul
+dataset `marts`, et `bigquery.jobUser` pour lancer des requêtes. J'ai vérifié ces droits
+**pour de vrai**, en envoyant directement à BigQuery, avec ce compte et sans aucun
+garde-fou applicatif, un `DELETE`, un `DROP TABLE`, un `CREATE TABLE` et une lecture de
+`raw` : les quatre sont refusés par BigQuery, seule la lecture de `marts` passe. J'ai
+utilisé `iam_member` et non `iam_policy` dans Terraform, pour ajouter un droit sans
+écraser ceux du compte du pipeline, géré par l'autre projet.
+
+**Niveau 2 : analyse du SQL.** Plutôt qu'une liste de mots interdits, fragile dans les deux
+sens (faux refus sur un mot dans un commentaire, oubli de `TRUNCATE`), j'analyse la requête
+avec `sqlglot` en dialecte BigQuery et j'applique une liste blanche : une seule
+instruction, de type `SELECT`, qui ne lit que des tables `marts.<table>`, avec un
+`LIMIT 1000` ajouté s'il manque. Le SQL exécuté est celui régénéré à partir de l'arbre
+analysé, pour que ce qui tourne soit exactement ce qui a été vérifié. Les tests couvrent
+les deux sens : 15 attaques refusées (écritures, requêtes enchaînées par `;`, écriture
+cachée derrière un commentaire, tables d'un autre dataset ou d'un autre projet) et des
+lectures légitimes acceptées, dont les 40 SQL de référence du jeu d'éval, pour prouver
+que le garde-fou ne dégrade pas l'agent.
+
+**Niveau 3 : plafonds BigQuery.** Un *dry run* estime gratuitement le volume lu avant
+toute exécution, et la requête est refusée au-delà de 100 Mo. L'exécution réelle est
+ensuite plafonnée par BigQuery lui-même (`maximum_bytes_billed`, délai de 30 s appliqué
+côté serveur et côté client), et seules 50 lignes sont renvoyées au modèle, avec le total
+et un indicateur de troncature. Ces règles sont testées sans réseau grâce à un faux
+client BigQuery passé en paramètre (injection de dépendance) : une requête dangereuse
+n'atteint jamais BigQuery, une requête trop coûteuse s'arrête au dry run.
+
+**Ce que j'en retiens.** « Lecture seule » doit être une garantie, pas une consigne dans
+un prompt : un prompt peut être contourné par une injection, des permissions non. Chaque
+niveau a un rôle propre. L'IAM est la barrière infranchissable, l'analyse du SQL donne au
+modèle une erreur immédiate et utile, et les plafonds protègent le coût, le temps et le
+contexte du modèle. J'ai aussi appris à vérifier une hypothèse de configuration avant de
+chercher un bug : les datasets étaient en région US et non EU comme je le supposais, et
+une variable non enregistrée dans `.env` m'a fait perdre du temps. Enfin, le cache de
+BigQuery rend gratuites les requêtes identiques récentes, ce qui réduira encore le coût
+réel de l'évaluation.
