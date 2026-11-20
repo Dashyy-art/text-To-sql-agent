@@ -1,0 +1,67 @@
+version: 2
+models:
+  - name: mart_station_monthly
+    description: Indicateurs par station et par mois.
+    data_tests:
+      - dbt_utils.unique_combination_of_columns:
+          arguments:
+            combination_of_columns: [station_id, observation_year, observation_month]
+    columns:
+      - {name: mean_tmax_c, description: Moyenne mensuelle de Tx validée (°C).}
+      - {name: mean_tmin_c, description: Moyenne mensuelle de Tn validée (°C).}
+      - {name: total_precip_mm, description: Cumul mensuel de précipitations validées (mm).}
+      - {name: heat_days, description: "Jours avec Tx ≥ 30 °C."}
+      - {name: valid_tmax_days, description: Jours avec une Tx valide.}
+  - name: mart_station_yearly
+    description: Indicateurs par station et par année, avec l'anomalie par rapport à la normale 1991-2020 de la station.
+    data_tests:
+      - dbt_utils.unique_combination_of_columns:
+          arguments:
+            combination_of_columns: [station_id, observation_year]
+    columns:
+      - name: station_id
+        data_tests:
+          - relationships:
+              arguments: {to: ref('stg_meteo__stations'), field: station_id}
+      - {name: mean_tmax_c, description: Moyenne annuelle de Tx validée (°C).}
+      - {name: normal_tmax_c, description: Normale 1991-2020 de la station (°C).}
+      - {name: tmax_anomaly_c, description: Écart à la normale (°C).}
+      - name: heat_days
+        description: "Jours avec Tx ≥ 30 °C."
+        data_tests:
+          - dbt_utils.accepted_range:
+              arguments: {min_value: 0, max_value: 366}
+      - {name: very_hot_days, description: "Jours avec Tx ≥ 35 °C."}
+      - {name: is_complete_year, description: "Vrai si au moins 90 % des jours ont une Tx valide."}
+      - {name: is_trend_station, description: Vrai si la station appartient au réseau fixe.}
+  - name: mart_department_yearly
+    description: Série annuelle par département, réseau fixe uniquement. La colonne station_count rend le calcul transparent.
+    columns:
+      - {name: station_count, description: Stations utilisées.}
+      - {name: mean_tmax_anomaly_c, description: Moyenne des anomalies des stations (°C).}
+      - {name: mean_heat_days_per_station, description: "Jours à Tx ≥ 30 °C par station, en moyenne."}
+      - {name: mean_very_hot_days_per_station, description: "Jours à Tx ≥ 35 °C par station, en moyenne."}
+  - name: mart_occitanie_yearly
+    description: Série régionale, moyenne des anomalies du réseau fixe. Source des bandes de réchauffement.
+    columns:
+      - name: observation_year
+        data_tests: [not_null, unique]
+      - {name: station_count, description: Stations utilisées.}
+      - {name: mean_tmax_anomaly_c, description: Moyenne des anomalies des stations (°C).}
+      - {name: mean_heat_days_per_station, description: "Jours à Tx ≥ 30 °C par station, en moyenne."}
+      - {name: mean_very_hot_days_per_station, description: "Jours à Tx ≥ 35 °C par station, en moyenne."}
+  - name: mart_heatwaves
+    description: "Une ligne par vague de chaleur : au moins 3 jours consécutifs à Tx ≥ 35 °C, pour une station."
+    columns:
+      - name: station_id
+        data_tests:
+          - not_null
+          - relationships:
+              arguments: {to: ref('stg_meteo__stations'), field: station_id}
+      - name: duration_days
+        description: Durée de l'épisode (jours).
+        data_tests:
+          - dbt_utils.accepted_range:
+              arguments: {min_value: 3}
+      - {name: peak_tmax_c, description: Tx la plus élevée de l'épisode (°C).}
+      - {name: mean_tmax_c, description: Tx moyenne de l'épisode (°C).}
