@@ -11,3 +11,8 @@ credentials/
 
 # --- Éditeur 
 .vscode/
+# --- Terraform ---
+infra/.terraform/
+*.tfstate
+*.tfstate.*
+*.tfvars
