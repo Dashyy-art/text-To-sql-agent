@@ -99,3 +99,44 @@ chercher un bug : les datasets étaient en région US et non EU comme je le supp
 une variable non enregistrée dans `.env` m'a fait perdre du temps. Enfin, le cache de
 BigQuery rend gratuites les requêtes identiques récentes, ce qui réduira encore le coût
 réel de l'évaluation.
+
+
+## Étape 4 : le serveur MCP
+
+**Ce qu'on a fait.** J'ai exposé l'entrepôt sous forme de serveur MCP (*Model Context
+Protocol*), en transport stdio, avec quatre outils en lecture seule : `list_tables` (les
+cinq marts, leur description et leur volume), `describe_table` (colonnes, types,
+descriptions issues de la documentation dbt du projet 1, et trois lignes d'exemple),
+`run_sql` (qui passe par les trois niveaux de garde-fous de l'étape 3) et `check_result`
+(contrôles de cohérence : résultat vide, valeurs NULL, valeurs hors bornes physiques).
+Je l'ai testé à la main avec MCP Inspector, y compris avec de mauvaises entrées, puis
+interrogé comme le ferait un client MCP du marché : il a répondu juste aux deux questions de
+développement posées et a refusé une demande de suppression.
+
+**Choix techniques.** Séparer le serveur de l'agent : le serveur porte les outils et les
+garde-fous, indépendamment du modèle, et n'importe quel client MCP en profite. Le schéma
+est servi par un outil plutôt que copié dans le prompt : le modèle ne lit que les tables
+utiles à la question, ce qui économise des tokens et passe à l'échelle. Les descriptions
+des outils et de leurs paramètres sont écrites comme des prompts (quand appeler l'outil,
+avec quelles règles), et chaque erreur est un message court qui aide le modèle à se
+corriger (« Table inconnue, tables disponibles : … »). Les métadonnées et les lignes
+d'exemple sont lues par l'API de BigQuery sans lancer de requête, donc gratuitement. En
+stdio, la sortie standard porte le protocole : aucun `print`, les journaux vont sur la
+sortie d'erreur, et les chemins de fichiers sont calculés depuis l'emplacement du code,
+car le client lance le serveur depuis un dossier inconnu. Le SDK `mcp` étant passé en
+version 2 (`FastMCP` renommé `MCPServer`), j'ai borné sa version majeure. Les tests
+passent par un client MCP en mémoire : ils vérifient le protocole complet (outils
+exposés, décrits, déclarés en lecture seule) et prouvent qu'un `DROP` est refusé sans
+aucun appel à BigQuery, en remplaçant le client par un objet vide. 39 tests, sans réseau
+ni secret.
+
+**Ce que j'en retiens.** La démo a trouvé un bug que mes tests n'avaient pas vu :
+`check_result` prenait toute colonne contenant `_c` pour une température, si bien que
+`station_count = 67` déclenchait une alerte ; sur les 40 réponses de référence, il
+produisait 9 faux positifs. J'ai corrigé la reconnaissance des colonnes (par suffixe ou
+par mot contenu) et ajouté un test qui fait passer les 40 bonnes réponses dans le
+contrôle : un garde-fou se teste dans les deux sens, car un faux positif pousse le modèle
+à « corriger » une réponse juste. La démo a aussi montré qu'un garde-fou ne protège que
+le canal qu'il contrôle : dans un assistant de code généraliste, le modèle dispose aussi d'un terminal avec
+mes identifiants. C'est pourquoi mon agent n'aura accès qu'aux outils MCP (risque
+d'« agentivité excessive » de l'OWASP).
