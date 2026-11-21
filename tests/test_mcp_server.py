@@ -1,4 +1,4 @@
-"""Tests du serveur MCP, via un client MCP en mémoire (sans BigQuery)."""
+"""Tests du serveur MCP, via un client MCP en mémoire (sans ouvrir la base)."""
 
 import asyncio
 
@@ -35,9 +35,9 @@ def test_every_tool_has_a_description_and_is_read_only():
         assert tool.annotations.read_only_hint
 
 
-def test_run_sql_refuses_write_without_calling_bigquery(monkeypatch):
-    # object() n'a aucune méthode : si BigQuery était appelé, le test planterait.
-    monkeypatch.setattr(server_module, "_client", object())
+def test_run_sql_refuses_write_without_touching_the_database(monkeypatch):
+    # object() n'a aucune méthode : si la base était appelée, le test planterait.
+    monkeypatch.setattr(server_module, "_connection", object())
     result = call_tool("run_sql", {"query": "DROP TABLE marts.mart_heatwaves"})
     assert result.is_error
     assert "lecture" in result.content[0].text

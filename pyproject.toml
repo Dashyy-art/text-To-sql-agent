@@ -1,14 +1,14 @@
 [project]
 name = "climate-sql-agent"
 version = "0.1.0"
-description = "Add your description here"
+description = "Agent text-to-SQL évalué et sécurisé sur une base DuckDB climatique, exposé via MCP"
 readme = "README.md"
 authors = [
-    { name = "Abdelali Ait Dabachi", email = "Abdelali.Ait-Dabachi@irit.fr" }
+    { name = "Abdelali Ait Dabachi", email = "dabachicf@gmail.com" }
 ]
 requires-python = ">=3.13"
 dependencies = [
-    "google-cloud-bigquery>=3.47.0",
+    "duckdb>=2.0.1",
     "mcp>=2.3,<3",
     "ollama>=0.6.3",
     "pydantic>=2.14.3",
@@ -17,8 +17,9 @@ dependencies = [
 ]
 
 [project.scripts]
-climate-sql-agent = "climate_sql_agent:main"
+climate-sql-agent = "climate_sql_agent.agent.cli:main"
 climate-sql-mcp = "climate_sql_agent.mcp_server.server:main"
+climate-sql-eval = "climate_sql_agent.eval.runner:main"
 
 
 [build-system]

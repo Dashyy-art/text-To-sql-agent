@@ -5,6 +5,7 @@ from sqlglot import exp
 from sqlglot.errors import ParseError
 
 ALLOWED_DATASET = "marts"
+DIALECT = "duckdb"
 DEFAULT_LIMIT = 1000
 
 # Types d'instructions qui modifient des données ou la structure.
@@ -21,11 +22,11 @@ def validate_sql(sql: str) -> str:
     Règles : une seule instruction, de type SELECT, qui ne lit que des tables
     du dataset autorisé. Ajoute un LIMIT s'il n'y en a pas.
     """
-    # 1. Le SQL doit être lisible en dialecte BigQuery.
+    # 1. Le SQL doit être lisible en dialecte DuckDB.
     try:
-        statements = sqlglot.parse(sql, read="bigquery")
+        statements = sqlglot.parse(sql, read=DIALECT)
     except ParseError as error:
-        raise UnsafeSQLError(f"SQL illisible en dialecte BigQuery : {error}") from error
+        raise UnsafeSQLError(f"SQL illisible en dialecte DuckDB : {error}") from error
 
     # "SELECT 1;" peut produire une instruction vide après le ';' : on l'ignore.
     statements = [s for s in statements if s is not None]
@@ -34,8 +35,10 @@ def validate_sql(sql: str) -> str:
     if len(statements) != 1:
         raise UnsafeSQLError(
             f"Une seule requête est autorisée, {len(statements)} trouvées. "
-            "N'enchaîne pas plusieurs requêtes avec ';'."
+            "Pour obtenir plusieurs résultats, combine-les en UNE requête : "
+            "GROUP BY avec IF(...) pour étiqueter des périodes, ou UNION ALL."
         )
+
     tree = statements[0]
 
     # 3. Uniquement de la lecture : SELECT, WITH ... SELECT, UNION...
@@ -53,7 +56,7 @@ def validate_sql(sql: str) -> str:
             continue  # référence à une sous-requête nommée (WITH), pas à une vraie table
         if table.catalog or table.db != ALLOWED_DATASET:
             raise UnsafeSQLError(
-                f"Table non autorisée : {table.sql(dialect='bigquery')}. "
+                f"Table non autorisée : {table.sql(dialect=DIALECT)}. "
                 f"Écris les tables sous la forme {ALLOWED_DATASET}.<nom_de_table>, "
                 f"par exemple {ALLOWED_DATASET}.mart_occitanie_yearly."
             )
@@ -62,4 +65,4 @@ def validate_sql(sql: str) -> str:
     if isinstance(tree, exp.Select) and not tree.args.get("limit"):
         tree = tree.limit(DEFAULT_LIMIT)
 
-    return tree.sql(dialect="bigquery")
+    return tree.sql(dialect=DIALECT)

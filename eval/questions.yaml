@@ -1,6 +1,6 @@
 # Jeu d'évaluation de l'agent text-to-SQL.
 # Les résultats attendus ne sont PAS ici : ils sont figés dans eval/expected_results.json
-# (générés en exécutant reference_sql sur BigQuery).
+# (générés en exécutant reference_sql sur la base DuckDB data/climat.duckdb).
 
 # ---------- Catégorie : simple (une table, un filtre) ----------
 
@@ -333,7 +333,7 @@
   category: temporal
   question: "Parmi les décennies complètes de 1950-1959 à 2010-2019, laquelle compte le plus d'épisodes de vague de chaleur pour les stations du réseau fixe ?"
   reference_sql: |
-    SELECT DIV(start_year, 10) * 10 AS decade_start, COUNT(*) AS heatwave_count
+    SELECT (start_year // 10) * 10 AS decade_start, COUNT(*) AS heatwave_count
     FROM marts.mart_heatwaves
     WHERE is_trend_station AND start_year BETWEEN 1950 AND 2019
     GROUP BY decade_start

@@ -7,12 +7,14 @@ __pycache__/
 
 # --- Secrets 
 .env
-credentials/
 
 # --- Éditeur 
 .vscode/
-# --- Terraform ---
-infra/.terraform/
-*.tfstate
-*.tfstate.*
-*.tfvars
+
+# --- Traces de développement de l'agent (brouillons, non versionnés) ---
+traces/
+
+
+# --- Fichiers personnels (non publiés) ---
+guide/
+email.md

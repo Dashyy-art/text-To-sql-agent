@@ -29,7 +29,9 @@ REJECTED = [
     ("SELECT 1; -- commentaire\nDROP TABLE marts.mart_heatwaves", "Une seule requête"),
     ("SELECT * FROM raw.precipitation_temperature_vent_31", "non autorisée"),
     ("SELECT * FROM mart_heatwaves", "non autorisée"),
-    ("SELECT * FROM `autre-projet.marts.mart_heatwaves`", "non autorisée"),
+    ("SELECT * FROM autre_base.marts.mart_heatwaves", "non autorisée"),
+    ("SELECT * FROM read_csv('/etc/passwd')", "non autorisée"),  # lecture d'un fichier
+    ("SELECT * FROM '/etc/passwd'", "non autorisée"),  # idem, syntaxe courte de DuckDB
     ("SELECT * FROM marts.mart_heatwaves JOIN raw.t USING (station_id)", "non autorisée"),
     ("SELECT * FROM (SELECT * FROM raw.t)", "non autorisée"),
     ("SELEC * FROM", "illisible"),

@@ -1,5 +1,8 @@
 """Tests des contrôles de cohérence (outil check_result)."""
 
+import json
+from pathlib import Path
+
 from climate_sql_agent.warehouse.checks import check_result
 
 
@@ -28,3 +31,15 @@ def test_null_values_are_flagged():
 
 def test_booleans_are_not_checked_as_numbers():
     assert check_result(["is_complete_year"], [[True]]) == []
+
+
+def test_count_columns_are_not_temperatures():
+    assert check_result(["station_count", "heatwave_count"], [[67, 1747]]) == []
+
+
+def test_all_expected_results_pass_without_warning():
+    """Aucun faux positif sur les 40 bonnes réponses du jeu d'éval."""
+    expected = json.loads(Path("eval/expected_results.json").read_text(encoding="utf-8"))
+    for question_id, result in expected["results"].items():
+        warnings = check_result(result["columns"], result["rows"])
+        assert warnings == [], f"{question_id} : {warnings}"
