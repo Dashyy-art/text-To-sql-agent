@@ -7,7 +7,8 @@ Date : 2026-11-18 · Matériel : RTX 4060 Laptop (8 Go VRAM), WSL2 · Ollama 0.3
 - Schéma des 2 tables donné dans le prompt système ; un seul outil `run_sql(query)`.
 - Pour chaque réponse : appel d'outil produit ? SQL lisible par sqlglot (BigQuery) ?
   SQL **juste** (vérifié à la main) ? Durée (modèle préchauffé) et tokens générés.
-- Script : `scripts/compare_models.py`.
+- Script de comparaison ponctuel, retiré du dépôt depuis le passage à DuckDB (il vérifiait le
+  SQL en dialecte BigQuery) ; il reste consultable dans l'historique git.
 
 **Contrainte :** connexion limitée (4G). Plutôt que 3 modèles de taille équivalente, on compare
 3 configurations sans téléchargement supplémentaire : l'effet du mode réflexion, et l'effet de la taille.
