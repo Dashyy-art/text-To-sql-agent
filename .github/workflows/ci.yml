@@ -1,0 +1,22 @@
+# Intégration continue : style + tests unitaires, à chaque push et pull request.
+# Pas de LLM ici : rapide, gratuit, et aucun secret nécessaire.
+name: CI
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v6
+      - name: Installer les dépendances (versions figées par uv.lock)
+        run: uv sync --locked
+      - name: Style
+        run: |
+          uv run ruff check .
+          uv run ruff format --check .
+      - name: Tests
+        run: uv run pytest -q
