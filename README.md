@@ -15,7 +15,7 @@ Prérequis : [uv](https://docs.astral.sh/uv/) et [Ollama](https://ollama.com), a
 d'au moins 8 Go de mémoire (ou de la patience sur processeur).
 
 ```bash
-git clone https://github.com/Dashyy-art/<nom-du-depot>.git && cd <nom-du-depot>
+git clone https://github.com/Dashyy-art/text-To-sql-agent.git && cd text-To-sql-agent
 make install
 ollama pull qwen3:8b
 make ask Q="Quelle a été l'année la plus froide par rapport à la normale 1991-2020 en Occitanie ?"
